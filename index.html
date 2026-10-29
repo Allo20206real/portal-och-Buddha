@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buddha & Poltal</title>
+<meta name="description" content="Meet Buddha and Poltal — two very fluffy window-sill cats. Play Flappy Cats!">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbf6ef;
+    --bg-alt: #f3e9dc;
+    --ink: #2b2420;
+    --muted: #6f625a;
+    --accent: #e0894f;
+    --accent-ink: #fff;
+    --card: #ffffff;
+    --line: #e7dccd;
+    --shadow: 0 20px 50px -20px rgba(80, 50, 20, .35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1c1815; --bg-alt: #26201c; --ink: #f5ece2; --muted: #b6a89c;
+      --accent: #f09a5e; --accent-ink: #1c1815; --card: #2b2420; --line: #3b322c;
+      --shadow: 0 20px 50px -20px rgba(0, 0, 0, .7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1815; --bg-alt: #26201c; --ink: #f5ece2; --muted: #b6a89c;
+    --accent: #f09a5e; --accent-ink: #1c1815; --card: #2b2420; --line: #3b322c;
+    --shadow: 0 20px 50px -20px rgba(0, 0, 0, .7);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 400 17px/1.6 Inter, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .btn, .step-label { font-family: Fredoka, Inter, sans-serif; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+  a { color: inherit; }
+
+  /* Nav */
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
+  .logo { font: 700 22px Fredoka, sans-serif; text-decoration: none; }
+  .logo span { color: var(--accent); }
+  nav .links a { margin-left: 20px; text-decoration: none; color: var(--muted); font-weight: 500; }
+  nav .links a:hover { color: var(--ink); }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; padding: 40px 0 80px; }
+  .hero h1 { font-size: clamp(44px, 7vw, 84px); line-height: 1; margin: 0 0 20px; font-weight: 700; letter-spacing: -1px; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { font-size: 19px; color: var(--muted); max-width: 32ch; margin: 0 0 32px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; border: 0; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 18px;
+    padding: 14px 26px; border-radius: 999px; text-decoration: none;
+    box-shadow: 0 8px 20px -8px var(--accent); transition: transform .15s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--line); }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-pics { position: relative; height: 480px; }
+  .hero-pics img {
+    position: absolute; width: 62%; aspect-ratio: 3/4; object-fit: cover; border-radius: 28px;
+    box-shadow: var(--shadow); border: 6px solid var(--card);
+  }
+  .hero-pics img:first-child { left: 0; top: 0; transform: rotate(-5deg); }
+  .hero-pics img:last-child { right: 0; bottom: 0; transform: rotate(4deg); }
+
+  /* Cats */
+  section { padding: 80px 0; }
+  .section-alt { background: var(--bg-alt); }
+  .eyebrow { color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 13px; }
+  h2 { font-size: clamp(32px, 5vw, 48px); margin: 6px 0 40px; line-height: 1.1; }
+  .cats { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .cat-card { background: var(--card); border-radius: 28px; overflow: hidden; box-shadow: var(--shadow); }
+  .cat-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+  .cat-card .body { padding: 24px 28px 28px; }
+  .cat-card h3 { font-size: 32px; margin: 0 0 4px; }
+  .cat-card .tag { color: var(--muted); margin: 0 0 16px; }
+  .facts { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .facts li { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 8px; font-size: 15px; }
+  .facts li b { font-weight: 500; color: var(--muted); }
+
+  /* Game section */
+  .steps { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+  .step-label {
+    display: flex; align-items: center; gap: 10px; padding: 8px 18px 8px 8px; border-radius: 999px;
+    background: var(--card); border: 2px solid var(--line); color: var(--muted); font-weight: 600;
+  }
+  .step-label i { font-style: normal; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--line); color: var(--ink); }
+  .step-label.on { border-color: var(--accent); color: var(--ink); }
+  .step-label.on i { background: var(--accent); color: var(--accent-ink); }
+  .pick { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 640px; }
+  .pick button {
+    background: var(--card); border: 3px solid var(--line); border-radius: 24px; padding: 24px 16px; cursor: pointer;
+    color: var(--ink); font: 600 24px Fredoka, sans-serif; transition: transform .15s, border-color .15s;
+  }
+  .pick button:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .pick button img { width: 120px; height: 120px; border-radius: 50%; display: block; margin: 0 auto 12px; }
+  .pick button small { display: block; font: 400 14px Inter, sans-serif; color: var(--muted); }
+
+  .game-box { display: none; max-width: 480px; }
+  .game-box.show { display: block; }
+  .stage { position: relative; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+  canvas { display: block; width: 100%; height: auto; cursor: pointer; }
+  .game-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 12px; flex-wrap: wrap; }
+  .game-bar .hint { color: var(--muted); font-size: 14px; }
+
+  footer { padding: 40px 0; text-align: center; color: var(--muted); font-size: 14px; }
+
+  @media (max-width: 800px) {
+    .hero { grid-template-columns: 1fr; gap: 32px; padding-top: 16px; }
+    .hero-pics { height: 380px; }
+    .cats { grid-template-columns: 1fr; }
+    nav .links a:not(:last-child) { display: none; }
+    section { padding: 56px 0; }
+  }
+  @media (max-width: 420px) {
+    .pick { gap: 12px; }
+    .pick button { padding: 16px 8px; font-size: 20px; }
+    .pick button img { width: 88px; height: 88px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#">Buddha <span>&amp;</span> Poltal</a>
+    <div class="links"><a href="#cats">The cats</a><a href="#play">Flappy Cats</a></div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <h1>Two fluffy cats. <em>One window sill.</em></h1>
+      <p>Meet Buddha and Poltal: professional window watchers, giraffe-statue guards and part-time cloud impersonators.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#play">Play Flappy Cats ▸</a>
+        <a class="btn ghost" href="#cats">Meet them</a>
+      </div>
+    </div>
+    <div class="hero-pics">
+      <img src="images/buddha.jpg" alt="Buddha sitting upright on the window sill">
+      <img src="images/poltal.jpg" alt="Poltal lounging on the window sill">
+    </div>
+  </header>
+</div>
+
+<section id="cats" class="section-alt">
+  <div class="wrap">
+    <div class="eyebrow">The residents</div>
+    <h2>Say hi to the crew</h2>
+    <div class="cats">
+      <article class="cat-card">
+        <img src="images/buddha.jpg" alt="Buddha" style="object-position: 50% 35%">
+        <div class="body">
+          <h3>Buddha</h3>
+          <p class="tag">Calm, regal and always perfectly posed. Sits like a statue, judges like a king.</p>
+          <ul class="facts">
+            <li><b>Look</b> Chocolate &amp; white, big fluffy mane</li>
+            <li><b>Favourite spot</b> The window sill, front and centre</li>
+            <li><b>Superpower</b> Staring straight into your soul</li>
+          </ul>
+        </div>
+      </article>
+      <article class="cat-card">
+        <img src="images/poltal.jpg" alt="Poltal" style="object-position: 50% 55%">
+        <div class="body">
+          <h3>Poltal</h3>
+          <p class="tag">A cloud with blue eyes. Lounges anywhere, owns everything, sheds generously.</p>
+          <ul class="facts">
+            <li><b>Look</b> Cream with soft tabby points</li>
+            <li><b>Favourite spot</b> Next to the golden giraffe</li>
+            <li><b>Superpower</b> Becoming 30% more fluffy on demand</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="play">
+  <div class="wrap">
+    <div class="eyebrow">Mini game</div>
+    <h2>Flappy Cats</h2>
+    <div class="steps">
+      <div class="step-label on" id="s1"><i>1</i> Choose a cat</div>
+      <div class="step-label" id="s2"><i>2</i> Play</div>
+    </div>
+
+    <div class="pick" id="pick">
+      <button data-cat="buddha"><img src="images/buddha-face.png" alt="">Buddha<small>Steady &amp; majestic</small></button>
+      <button data-cat="poltal"><img src="images/poltal-face.png" alt="">Poltal<small>Light as fluff</small></button>
+    </div>
+
+    <div class="game-box" id="gameBox">
+      <div class="stage"><canvas id="game" width="480" height="640"></canvas></div>
+      <div class="game-bar">
+        <span class="hint">Click, tap or press Space to flap</span>
+        <button class="btn ghost" id="switchCat">Switch cat</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>Made with love for Buddha &amp; Poltal 🐾</footer>
+
+<script>
+(() => {
+  const W = 480, H = 640, GROUND = 80;
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const pick = document.getElementById('pick');
+  const box = document.getElementById('gameBox');
+  const s1 = document.getElementById('s1'), s2 = document.getElementById('s2');
+
+  const faces = {};
+  for (const n of ['buddha', 'poltal']) { faces[n] = new Image(); faces[n].src = `images/${n}-face.png`; }
+  const names = { buddha: 'Buddha', poltal: 'Poltal' };
+  // Poltal is a bit lighter and floatier, Buddha a bit heavier
+  const physics = { buddha: { g: 0.45, flap: -7.6 }, poltal: { g: 0.40, flap: -7.2 } };
+
+  const store = {
+    get(k) { try { return +localStorage.getItem(k) || 0; } catch { return 0; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} }
+  };
+
+  let cat = null, state = 'ready', cy, vy, pipes, score, best, frame, raf = null, last = 0;
+  const R = 26, CX = 130, GAP = 170, PW = 70, SPEED = 2.6, SPACING = 220;
+
+  function reset() {
+    cy = H / 2 - 40; vy = 0; pipes = []; score = 0; frame = 0; state = 'ready';
+    best = store.get('flappy-best-' + cat);
+  }
+
+  function choose(c) {
+    cat = c; reset();
+    pick.style.display = 'none'; box.classList.add('show');
+    s1.classList.remove('on'); s2.classList.add('on');
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(loop); }
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function backToPick() {
+    cancelAnimationFrame(raf); raf = null; cat = null;
+    box.classList.remove('show'); pick.style.display = '';
+    s2.classList.remove('on'); s1.classList.add('on');
+  }
+
+  function flap() {
+    if (!cat) return;
+    if (state === 'over') { if (frame > 30) reset(); return; }
+    if (state === 'ready') state = 'play';
+    vy = physics[cat].flap;
+  }
+
+  function addPipe() {
+    const top = 70 + Math.random() * (H - GROUND - GAP - 140);
+    pipes.push({ x: W + 10, top, passed: false });
+  }
+
+  function update() {
+    frame++;
+    if (state === 'ready') { cy = H / 2 - 40 + Math.sin(frame / 12) * 8; return; }
+    if (state === 'over') { if (cy < H - GROUND - R) { vy += 0.6; cy = Math.min(cy + vy, H - GROUND - R); } return; }
+
+    vy += physics[cat].g; cy += vy;
+    if (!pipes.length || pipes[pipes.length - 1].x < W - SPACING) addPipe();
+    for (const p of pipes) {
+      p.x -= SPEED;
+      if (!p.passed && p.x + PW < CX - R) { p.passed = true; score++; }
+      const inX = CX + R - 6 > p.x && CX - R + 6 < p.x + PW;
+      if (inX && (cy - R + 6 < p.top || cy + R - 6 > p.top + GAP)) die();
+    }
+    pipes = pipes.filter(p => p.x > -PW);
+    if (cy + R > H - GROUND || cy - R < -40) die();
+  }
+
+  function die() {
+    state = 'over'; frame = 0;
+    if (score > best) { best = score; store.set('flappy-best-' + cat, best); }
+  }
+
+  /* ---------- drawing ---------- */
+  function sky() {
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#8fd0f5'); g.addColorStop(1, '#ffe7c7');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    // drifting clouds
+    ctx.fillStyle = 'rgba(255,255,255,.85)';
+    const off = (state === 'play' ? frame * 0.4 : frame * 0.15);
+    for (let i = 0; i < 4; i++) {
+      const x = ((i * 160 - off) % (W + 160) + W + 160) % (W + 160) - 80, y = 70 + i * 55 % 160;
+      ctx.beginPath(); ctx.arc(x, y, 22, 0, 7); ctx.arc(x + 24, y - 10, 26, 0, 7); ctx.arc(x + 50, y, 20, 0, 7); ctx.fill();
+    }
+  }
+
+  function post(x, y, h, cap) {
+    // scratching-post pipes: sisal rope body + carpeted cap
+    ctx.fillStyle = '#d9b47c'; ctx.fillRect(x, y, PW, h);
+    ctx.strokeStyle = 'rgba(120,80,30,.35)'; ctx.lineWidth = 2;
+    for (let yy = y + 6; yy < y + h; yy += 8) { ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + PW, yy + 3); ctx.stroke(); }
+    ctx.fillStyle = '#8a5a9e';
+    ctx.beginPath(); ctx.roundRect(x - 8, cap, PW + 16, 22, 8); ctx.fill();
+  }
+
+  function draw() {
+    sky();
+    for (const p of pipes) {
+      post(p.x, 0, p.top, p.top - 22);
+      const by = p.top + GAP; post(p.x, by, H - GROUND - by, by);
+    }
+    // ground
+    ctx.fillStyle = '#6fbf62'; ctx.fillRect(0, H - GROUND, W, 16);
+    ctx.fillStyle = '#c99a63'; ctx.fillRect(0, H - GROUND + 16, W, GROUND - 16);
+    ctx.fillStyle = 'rgba(0,0,0,.08)';
+    const go = state === 'play' ? (frame * SPEED) % 32 : 0;
+    for (let x = -go; x < W; x += 32) ctx.fillRect(x, H - GROUND + 16, 16, GROUND - 16);
+
+    // cat
+    ctx.save(); ctx.translate(CX, cy);
+    const ang = state === 'ready' ? 0 : Math.max(-0.5, Math.min(1.2, vy / 10));
+    ctx.rotate(ang);
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(0, 0, R + 4, 0, 7); ctx.fill();
+    // little ears
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.moveTo(-R + 2, -R / 2); ctx.lineTo(-R + 6, -R - 12); ctx.lineTo(-6, -R + 2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(R - 2, -R / 2); ctx.lineTo(R - 6, -R - 12); ctx.lineTo(6, -R + 2); ctx.fill();
+    if (faces[cat].complete) ctx.drawImage(faces[cat], -R, -R, R * 2, R * 2);
+    ctx.restore();
+
+    // text
+    ctx.textAlign = 'center'; ctx.lineJoin = 'round';
+    const txt = (t, y, size) => {
+      ctx.font = `700 ${size}px Fredoka, sans-serif`;
+      ctx.lineWidth = size / 6; ctx.strokeStyle = '#2b2420'; ctx.strokeText(t, W / 2, y);
+      ctx.fillStyle = '#fff'; ctx.fillText(t, W / 2, y);
+    };
+    if (state === 'play') txt(score, 90, 56);
+    if (state === 'ready') { txt('Flappy ' + names[cat], 170, 44); txt('Tap to start', H - GROUND - 120, 26); }
+    if (state === 'over') {
+      ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(0, 0, W, H);
+      txt('Game over', 200, 52);
+      txt('Score ' + score + '   ·   Best ' + best, 260, 26);
+      if (frame > 30) txt('Tap to try again', 330, 24);
+    }
+  }
+
+  function loop(now) {
+    // fixed 60fps step so speed is the same on 120Hz screens
+    let steps = Math.min(5, Math.floor((now - last) / (1000 / 60)));
+    if (steps > 0) { last += steps * (1000 / 60); while (steps--) update(); }
+    draw();
+    raf = requestAnimationFrame(loop);
+  }
+
+  pick.addEventListener('click', e => { const b = e.target.closest('button'); if (b) choose(b.dataset.cat); });
+  document.getElementById('switchCat').addEventListener('click', backToPick);
+  canvas.addEventListener('pointerdown', e => { e.preventDefault(); flap(); });
+  window.addEventListener('keydown', e => {
+    if (cat && (e.code === 'Space' || e.code === 'ArrowUp')) { e.preventDefault(); flap(); }
+  });
+})();
+</script>
+</body>
+</html>
